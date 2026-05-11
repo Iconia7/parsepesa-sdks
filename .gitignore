@@ -1,0 +1,33 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+dist/
+build/
+*.egg-info/
+venv/
+.venv/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Flutter/Dart
+.dart_tool/
+.packages
+.pub/
+build/
+ios/.generated/
+android/.generated/
+
+# Secrets
+.env
+*.pem
+*.key
