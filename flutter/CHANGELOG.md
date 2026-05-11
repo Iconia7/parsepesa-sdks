@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.1
 
 - Fixed parsing results.
 - Support for single and batch parsing.

@@ -1,6 +1,6 @@
 {
   "name": "parsepesa",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Official Node.js SDK for ParsePesa - The M-Pesa SMS Parsing API",
   "main": "index.js",
   "types": "index.d.ts",
@@ -19,10 +19,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Iconia7/parsepesa-js"
+    "url": "https://github.com/Iconia7/parsepesa-sdks"
   },
   "bugs": {
-    "url": "https://github.com/Iconia7/parsepesa-js/issues"
+    "url": "https://github.com/Iconia7/parsepesa-sdks/issues"
   },
   "homepage": "https://parsepesa.nexoracreatives.co.ke",
   "dependencies": {}

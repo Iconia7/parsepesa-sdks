@@ -1,0 +1,22 @@
+{
+    "name": "parsepesa/php",
+    "description": "Official PHP SDK for ParsePesa - The Stripe for M-Pesa SMS.",
+    "type": "library",
+    "keywords": ["mpesa", "sms", "parser", "kenya", "fintech", "parsepesa"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nexora Creative",
+            "email": "info@nexoracreatives.co.ke"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ParsePesa\\": "src/"
+        }
+    }
+}
