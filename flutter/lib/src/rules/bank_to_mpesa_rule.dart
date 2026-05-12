@@ -82,7 +82,7 @@ class BankToMpesaRule implements ParseRule {
         currency: 'KES',
         counterparty: cleanCounterparty.isEmpty ? counter.trim() : cleanCounterparty,
         phoneNumber: phoneNumber,
-        timestamp: timestamp!,
+        timestamp: timestamp,
       ),
     );
   }
