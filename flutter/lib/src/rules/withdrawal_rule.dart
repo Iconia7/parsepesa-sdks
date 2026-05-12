@@ -25,8 +25,27 @@ class WithdrawalRule implements ParseRule {
     caseSensitive: false,
   );
 
+  // Pattern 3: [ID] Confirmed.on [Date] at [Time]Withdraw Ksh[Amt] from [Agent] New M-PESA balance is Ksh[Bal]. Transaction cost, Ksh[Cost]
+  static final RegExp _pattern3 = RegExp(
+    r'([A-Z0-9]{8,12})\s+Confirmed\.on\s+(\d{1,2}/\d{1,2}/\d{2,4})\s+at\s+(\d{1,2}:\d{2}\s*[AP]M)Withdraw\s+Ksh([\d,]+\.?\d*)\s+from\s+(.+?)\s+New\s+M-PESA\s+balance\s+is\s+Ksh([\d,]+\.?\d*)(?:\.\s+Transaction\s+cost,\s+Ksh([\d,]+\.?\d*))?',
+    caseSensitive: false,
+  );
+
   @override
   ParseResult? tryParse(String rawSms, String? senderId) {
+    final m3 = _pattern3.firstMatch(rawSms);
+    if (m3 != null) {
+      return _build(
+        id: m3.group(1)!,
+        amount: m3.group(4)!,
+        agent: m3.group(5)!,
+        date: m3.group(2)!,
+        time: m3.group(3)!,
+        balanceStr: m3.group(6),
+        feeStr: m3.group(7),
+      );
+    }
+
     final m1 = _pattern1.firstMatch(rawSms);
     if (m1 != null) {
       return _build(
@@ -47,7 +66,6 @@ class WithdrawalRule implements ParseRule {
         agent: m2.group(2)!,
         date: m2.group(3)!,
         time: m2.group(4)!,
-        balanceStr: null,
       );
     }
 
@@ -61,10 +79,12 @@ class WithdrawalRule implements ParseRule {
     required String date,
     required String time,
     String? balanceStr,
+    String? feeStr,
   }) {
     try {
       final double parsedAmount = double.parse(amount.replaceAll(',', ''));
       final double? balance = balanceStr != null ? double.tryParse(balanceStr.replaceAll(',', '')) : null;
+      final double? fee = feeStr != null ? double.tryParse(feeStr.replaceAll(',', '')) : null;
 
       final phoneMatch = RegExp(r'(\d{10,12})').firstMatch(agent);
       String? phoneNumber = phoneMatch?.group(1);
@@ -89,6 +109,7 @@ class WithdrawalRule implements ParseRule {
           counterparty: cleanAgent.isEmpty ? agent : cleanAgent,
           phoneNumber: phoneNumber,
           balance: balance,
+          fee: fee,
           timestamp: timestamp,
         ),
       );

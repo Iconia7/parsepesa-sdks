@@ -7,6 +7,8 @@ class Transaction {
   final String? phoneNumber;
   final String? accountNumber;
   final double? balance;
+  final String? status;
+  final double? fee;
   final DateTime timestamp;
 
   Transaction({
@@ -18,6 +20,8 @@ class Transaction {
     this.phoneNumber,
     this.accountNumber,
     this.balance,
+    this.status,
+    this.fee,
     required this.timestamp,
   });
 
@@ -39,6 +43,8 @@ class Transaction {
       phoneNumber: json['phoneNumber'] as String? ?? json['phone_number'] as String?,
       accountNumber: json['accountNumber'] as String? ?? json['account_number'] as String?,
       balance: json['balance'] != null ? (json['balance'] as num).toDouble() : null,
+      status: json['status'] as String?,
+      fee: json['fee'] != null ? (json['fee'] as num).toDouble() : null,
       timestamp: timestamp,
     );
   }
@@ -53,6 +59,8 @@ class Transaction {
       'phoneNumber': phoneNumber,
       'accountNumber': accountNumber,
       'balance': balance,
+      'status': status,
+      'fee': fee,
       'timestamp': timestamp.toIso8601String(),
     };
   }

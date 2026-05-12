@@ -9,7 +9,8 @@ import '../rules/incoming_money_rule.dart';
 import '../rules/merchant_transfer_rule.dart';
 import '../rules/bank_to_mpesa_rule.dart';
 import '../rules/okoa_rule.dart';
-// import other rules as they are implemented
+import '../rules/balance_rule.dart';
+import '../rules/card_transaction_rule.dart';
 
 class ParserRegistry {
   final List<ParseRule> _rules = [
@@ -22,7 +23,8 @@ class ParserRegistry {
     MerchantTransferRule(),
     BankToMpesaRule(),
     OkoaRule(),
-    // Add more rules here
+    BalanceRule(),
+    CardTransactionRule(),
   ];
 
   ParserRegistry() {

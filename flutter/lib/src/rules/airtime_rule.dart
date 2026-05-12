@@ -24,9 +24,45 @@ class AirtimeRule implements ParseRule {
     r'You\s+have\s+(?:bought|purchased)\s+airtime\s+(?:of\s+)?Ksh([\d,]+\.?\d*)\s+on\s+(\d{1,2}/\d{1,2}/\d{2,4})\s+at\s+(\d{1,2}:\d{2}\s*[AP]M)',
     caseSensitive: false,
   );
+  
+  // Pattern 3: Received Airtime
+  static final RegExp _pattern3 = RegExp(
+    r'([A-Z0-9]{8,12})\s+confirmed\.?\s+You\s+have\s+received\s+Airtime\s+of\s+(?:KSH|Ksh)\s*([\d,]+\.?\d*)\s+from\s+(.+?)\s+on\s+(\d{1,2}/\d{1,2}/\d{2,4})\s+at\s+(\d{1,2}:\d{2}\s*[AP]M)',
+    caseSensitive: false,
+  );
+
+  // Pattern 4: Bought for other
+  static final RegExp _pattern4 = RegExp(
+    r'([A-Z0-9]{8,12})\s+confirmed\.?\s+You\s+bought\s+Ksh([\d,]+\.?\d*)\s+of\s+airtime\s+for\s+(\d+)\s+on\s+(\d{1,2}/\d{1,2}/\d{2,4})\s+at\s+(\d{1,2}:\d{2}\s*[AP]M)\.?(?:\s*New\s+balance\s+is\s+Ksh([\d,]+\.?\d*))?',
+    caseSensitive: false,
+  );
 
   @override
   ParseResult? tryParse(String rawSms, String? senderId) {
+    final m3 = _pattern3.firstMatch(rawSms);
+    if (m3 != null) {
+      return _build(
+        id: m3.group(1)!,
+        amount: m3.group(2)!,
+        date: m3.group(4)!,
+        time: m3.group(5)!,
+        counterparty: m3.group(3),
+        type: 'airtime_received',
+      );
+    }
+
+    final m4 = _pattern4.firstMatch(rawSms);
+    if (m4 != null) {
+      return _build(
+        id: m4.group(1)!,
+        amount: m4.group(2)!,
+        date: m4.group(4)!,
+        time: m4.group(5)!,
+        phoneNumber: m4.group(3),
+        balanceStr: m4.group(6),
+      );
+    }
+
     final m1 = _pattern1.firstMatch(rawSms);
     if (m1 != null) {
       return _build(
@@ -45,7 +81,6 @@ class AirtimeRule implements ParseRule {
         amount: m2.group(1)!,
         date: m2.group(2)!,
         time: m2.group(3)!,
-        balanceStr: null,
       );
     }
 
@@ -58,6 +93,9 @@ class AirtimeRule implements ParseRule {
     required String date,
     required String time,
     String? balanceStr,
+    String? counterparty,
+    String? phoneNumber,
+    String? type,
   }) {
     try {
       final double parsedAmount = double.parse(amount.replaceAll(',', ''));
@@ -76,10 +114,11 @@ class AirtimeRule implements ParseRule {
         parserVersion: version,
         data: Transaction(
           transactionId: id,
-          type: transactionType,
+          type: type ?? transactionType,
           amount: parsedAmount,
           currency: 'KES',
-          counterparty: 'Safaricom Airtime',
+          counterparty: counterparty ?? 'Safaricom Airtime',
+          phoneNumber: phoneNumber,
           balance: balance,
           timestamp: timestamp,
         ),

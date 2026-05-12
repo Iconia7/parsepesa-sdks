@@ -91,10 +91,10 @@ class IncomingMoneyRule implements ParseRule {
         timestamp = DateFormat('d/M/yyyy h:mm a').parse('$date ${time.trim()}');
       }
 
-      // Extract phone number if present
-      final phoneMatch = RegExp(r'(\d{10,12})').firstMatch(counterparty);
+      // Extract phone number if present (including masked numbers like 0710***494)
+      final phoneMatch = RegExp(r'(\d{3,4}[\*x]+\d{3,4}|\d{10,12})').firstMatch(counterparty);
       String? phoneNumber = phoneMatch?.group(1);
-      String cleanCounterparty = counterparty.replaceAll(RegExp(r'\d{10,12}'), '').trim();
+      String cleanCounterparty = counterparty.replaceAll(RegExp(r'\d{3,4}[\*x]+\d{3,4}|\d{10,12}'), '').trim();
 
       return ParseResult(
         success: true,
@@ -105,7 +105,7 @@ class IncomingMoneyRule implements ParseRule {
           type: transactionType,
           amount: double.parse(amount.replaceAll(',', '')),
           currency: 'KES',
-          counterparty: cleanCounterparty.isEmpty ? counterparty : cleanCounterparty,
+          counterparty: (cleanCounterparty.isEmpty ? counterparty : cleanCounterparty).replaceAll(RegExp(r'\s+'), ' '),
           phoneNumber: phoneNumber,
           balance: balance != null ? double.tryParse(balance.replaceAll(',', '')) : null,
           timestamp: timestamp,
