@@ -1,38 +1,52 @@
 # ParsePesa Flutter SDK
 
-Official Flutter client for the [ParsePesa](https://parsepesa.nexoracreatives.co.ke) API. Convert raw M-Pesa SMS notifications into structured JSON data instantly and manage your webhooks.
+Official Flutter SDK for [ParsePesa](https://parsepesa.nexoracreatives.co.ke). The ultimate toolkit for M-Pesa integration.
+
+## 🚀 The Hybrid Strategy
+ParsePesa now works **offline and for free** by default. Use the local parsing engine for privacy and speed, and connect to our Cloud API for advanced AI fallbacks and dashboards.
 
 ## Installation
 
 ```yaml
 dependencies:
-  parsepesa: ^1.1.0
+  parsepesa: ^2.0.0
 ```
 
 ## Quick Start
 
+### 1. Free Offline Mode (No API Key Required)
+Parse SMS instantly on the device without any network calls.
+
 ```dart
 import 'package:parsepesa/parsepesa.dart';
 
-void main() async {
-  final client = ParsePesa("your_api_key_here");
+final result = ParsePesa().parseLocal("Confirmed. You have received KES 500...");
+print(result.data?.amount); // 500.0
+```
 
-  // 1. Manage Parsing Callbacks
-  await client.parsingWebhooks.create("https://api.myapp.com/callback");
+### 2. Hybrid Cloud Mode (Paid API Key)
+Activate "Cloud Mode" to get **AI Smart Fallbacks** for complex messages and automatic syncing to your **ParsePesa Dashboard**.
 
-  // 2. Manage Daraja Bridges
-  await client.darajaProxy.create("https://api.myapp.com/mpesa", name: "App Bridge");
+```dart
+import 'package:parsepesa/parsepesa.dart';
 
-  // 3. Parse and check balance
-  final result = await client.parse("...");
-  final info = await client.getBalance();
+void main() {
+  // Initialize once
+  ParsePesa.init(
+    apiKey: "pp_live_...", 
+    syncToCloud: true, // Auto-sync local parses to your dashboard
+  );
 }
+
+// Later in your code...
+final result = await ParsePesa.instance.parse("..."); 
 ```
 
 ## Features
-- **Unified Webhooks**: Control Parsing and Daraja webhooks from your app.
-- **Cross-Platform**: Full support for Mobile, Web, and Desktop.
-- **Billing Access**: Real-time balance monitoring.
+- **🆓 100% Free Local Parsing**: High-performance regex rules that run on the device.
+- **🧠 AI Smart Fallback**: If local rules fail, our Cloud AI (Gemini) takes over.
+- **☁️ Automatic Sync**: Mirror your app's transactions to the Cloud Dashboard for accounting and webhooks.
+- **🛡️ Privacy First**: Financial data stays on the device unless you choose to sync it.
 
 ## Documentation
 For full API documentation, visit [parsepesa.nexoracreatives.co.ke/docs](https://parsepesa.nexoracreatives.co.ke/docs).
