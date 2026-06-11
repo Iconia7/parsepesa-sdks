@@ -23,8 +23,7 @@ class BalanceRule implements ParseRule {
     if (match == null) return null;
 
     final airtimeBal = double.parse(match.group(1)!.replaceAll(',', ''));
-    final okoaBalStr = match.group(3);
-    // Note: okoaBal is extracted but currently not used in the Transaction model balance field which prioritizes airtime balance.
+    // Note: Airtime balance is extracted; other fields like Okoa balance are currently not prioritized in the Transaction model balance field.
 
     return ParseResult(
       success: true,

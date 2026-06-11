@@ -9,7 +9,7 @@ ParsePesa now works **offline and for free** by default. Use the local parsing e
 
 ```yaml
 dependencies:
-  parsepesa: ^2.0.1
+  parsepesa: ^2.1.2
 ```
 
 ## Quick Start
