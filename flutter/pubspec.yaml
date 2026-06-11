@@ -12,6 +12,7 @@ dependencies:
   http: ^1.6.0
   intl: ^0.20.0
   json_annotation: ^4.11.0
+  crypto: ^3.0.3
 
 
 dev_dependencies:
